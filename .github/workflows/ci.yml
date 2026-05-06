@@ -66,10 +66,11 @@ jobs:
     runs-on: ubuntu-24.04
     needs: [ test, build ]
     steps:
-      env:
-        DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
-      run: |
-        echo "The length of the secret is: ${#DEPLOY_TOKEN}"
+      - name: Print secret length
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          echo "The length of the secret is: ${#DEPLOY_TOKEN}"
   # TODO: Add test job
   # TODO: Add build job
   # TODO (Task 4): Add deploy job with secret injection
