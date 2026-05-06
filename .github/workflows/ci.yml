@@ -1,0 +1,57 @@
+# CI Pipeline — Lab 01: CI/CD Pipeline Architecture
+#
+# TODO: Complete this workflow file by following the lab tasks.
+#
+# Action SHAs for pinning:
+#   actions/checkout v4.2.2:    11bd71901bbe5b1630ceea73d27597364c9af683
+#   actions/setup-node v4.4.0:  49933ea5288caeca8642d1e84afbd3f7d6820020
+#
+# Task 1: Create three jobs (lint, test, build) that run sequentially.
+# Task 2: Add dependency caching using setup-node's cache option.
+# Task 3: Restructure so test and build run in parallel after lint.
+# Task 4: Add a deploy job that uses the DEPLOY_TOKEN secret.
+
+name: CI Pipeline
+
+# TODO: Add triggers for push to main and pull requests to main
+# Example trigger format:
+on:
+  push:
+    branches: [main]
+
+# TODO: Add permissions block
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - run: npm ci
+      - run: npm run lint
+      # TODO: Add setup-node step with node-version 20
+      # TODO: Run npm ci
+      # TODO: Run npm run lint
+
+  test:
+    runs-on: ubuntu-24.04
+    needs: lint
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - run: npm ci
+      - run: npm test
+
+  build:
+    runs-on: ubuntu-24.04
+    needs: lint
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - run: npm ci
+      - run: npm build
+  # TODO: Add test job
+  # TODO: Add build job
+  # TODO (Task 4): Add deploy job with secret injection
