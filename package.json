@@ -1,0 +1,15 @@
+{
+  "name": "cicd-lab-01",
+  "version": "1.0.0",
+  "description": "Sample Node.js app for CI/CD pipeline lab",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src/",
+    "test": "node --test src/index.test.js",
+    "build": "node scripts/build.js",
+    "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "eslint": "9.17.0"
+  }
+}
