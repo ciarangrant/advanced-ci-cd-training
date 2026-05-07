@@ -23,7 +23,7 @@ on:
 
 # TODO: Add permissions block
 permissions:
-  content: read
+  contents: read
 
 env:
   TF_VERSION: "1.11.4"
