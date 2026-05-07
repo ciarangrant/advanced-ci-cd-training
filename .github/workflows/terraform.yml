@@ -1,0 +1,80 @@
+# Terraform CI/CD — Lab 03: Infrastructure as Code with Terraform
+#
+# TODO: Complete this workflow file by following the lab tasks.
+#
+# Action SHAs for pinning:
+#   actions/checkout v4.2.2:                    11bd71901bbe5b1630ceea73d27597364c9af683
+#   hashicorp/setup-terraform v3.1.2:           b9cd54a3c349d3f38e8881555e7e3f22b67044a7
+#   aws-actions/configure-aws-credentials v4.1.0: ececac1a45f3b08a01d2dd070d28d111c5fe6722
+#
+# Task 3: Create a workflow that:
+#   - Triggers on push to main and pull requests to main
+#   - Sets permissions: contents: read, pull-requests: write
+#   - Configures AWS credentials from repository secrets
+#   - Runs terraform init, validate, and plan on every trigger
+#   - Runs terraform apply only on push to main (not on PRs)
+
+name: Terraform CI/CD
+
+# TODO: Add triggers for push to main and pull requests to main
+on:
+  push:
+    branches: [main]
+
+# TODO: Add permissions block
+permissions:
+  content: read
+
+env:
+  TF_VERSION: "1.11.4"
+  AWS_REGION: "eu-west-1"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: terraform/
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      # TODO: Add setup-terraform step using hashicorp/setup-terraform
+      #       with terraform_version set to ${{ env.TF_VERSION }}
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          # Optional: terraform_wrapper: false
+          # (Set to false if you want to parse raw JSON output from terraform commands)
+
+
+      # TODO: Add configure-aws-credentials step using aws-actions/configure-aws-credentials
+      #       with aws-access-key-id, aws-secret-access-key, and aws-region
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # TODO: Add terraform init step
+      - name: Terraform Init
+        run: terraform init
+
+      # TODO: Add terraform validate step
+      - name: Terraform validate
+        run: terraform validate
+
+      # TODO: Add terraform plan step with -no-color -out=tfplan
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -out=tfplan
+        env:
+          TF_VAR_unique_suffix: ${{ secrets.UNIQUE_SUFFIX }}
+
+      # TODO: Add terraform apply step (only on push to main)
+      #       Use: terraform apply -auto-approve tfplan
+      - name: Terraform Apply
+        # This is the "Safety Gate"
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve tfplan
