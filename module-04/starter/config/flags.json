@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "flags": {
+    "new-dashboard-widget": {
+      "name": "New Dashboard Widget",
+      "description": "Controls visibility of the new dashboard widget"
+    }
+  },
+  "values": {
+    "new-dashboard-widget": {
+      "enabled": false
+    }
+  }
+}

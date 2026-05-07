@@ -1,0 +1,40 @@
+# TODO: Complete the ALB weighted routing annotation.
+#
+# Requirements:
+# - Split traffic: 95% to app-stable, 5% to app-canary
+# - Use ALB ingress annotations for weighted target groups
+# - The backend service name must be "weighted-routing" with port name "use-annotation"
+#
+# Hint: The annotation key is:
+#   alb.ingress.kubernetes.io/actions.weighted-routing
+# The value is a JSON string with type "forward" and a forwardConfig
+# containing targetGroups with serviceName, servicePort, and weight.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    # TODO: Add the weighted routing annotation here.
+    # alb.ingress.kubernetes.io/actions.weighted-routing: |
+    #   {
+    #     "type": "forward",
+    #     "forwardConfig": {
+    #       "targetGroups": [
+    #         ... fill in stable and canary target groups with weights ...
+    #       ]
+    #     }
+    #   }
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: weighted-routing
+                port:
+                  name: use-annotation

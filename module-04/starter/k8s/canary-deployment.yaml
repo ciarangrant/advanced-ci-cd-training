@@ -1,0 +1,53 @@
+# TODO: Complete the canary Deployment and Service.
+#
+# Requirements:
+# - Deployment name: app-canary
+# - Replicas: 1
+# - Labels (selector and template): app: myapp, version: canary
+# - Image: localhost/myapp:v1.1
+# - Container port: 3000
+# - Readiness probe: httpGet on /health port 3000, periodSeconds 5
+# - Service name: app-canary
+# - Service selector: app: myapp, version: canary
+# - Service port: 80 -> targetPort: 3000
+#
+# Hint: Use k8s/stable-deployment.yaml as a reference.
+#       Change the name, labels, image, and replicas.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+      # TODO: Add version label
+  template:
+    metadata:
+      labels:
+        app: myapp
+        # TODO: Add version label
+    spec:
+      containers:
+        - name: app
+          # TODO: Set the image to localhost/myapp:v1.1
+          # (replace the placeholder below -- an empty string will fail kubectl validation)
+          image: "REPLACE_ME:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          # TODO: Add a readiness probe (httpGet, /health, port 3000)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-canary
+spec:
+  selector:
+    app: myapp
+    # TODO: Add version label to match the canary pods
+  ports:
+    - port: 80
+      targetPort: 3000

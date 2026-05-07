@@ -23,7 +23,7 @@ resource "aws_s3_bucket" "app_data" {
 
   # Prevents accidental deletion via terraform destroy
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {

@@ -1,0 +1,19 @@
+# Local Labs: Traefik IngressRoute for weighted traffic splitting
+# Replaces the ALB-annotated ingress.yaml used in Cloud Labs
+#
+# TODO: Complete the IngressRoute to split traffic between
+#       app-stable (95%) and app-canary (5%)
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-routing
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`app.local`)
+      kind: Rule
+      services:
+        # TODO: Add app-stable service (name, port, weight)
+        # TODO: Add app-canary service (name, port, weight)

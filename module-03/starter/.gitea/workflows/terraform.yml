@@ -1,0 +1,28 @@
+# Local Labs: Gitea Actions workflow for Terraform
+# TODO: Complete this workflow to run terraform init, validate, plan on all pushes/PRs
+#       and terraform apply only on merge to main
+name: Terraform
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: terraform-local
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269571ab # v3
+        with:
+          terraform_version: "1.14.8"
+
+      # TODO: Add Terraform Init step
+      # TODO: Add Terraform Validate step
+      # TODO: Add Terraform Plan step
+      # TODO: Add Terraform Apply step (only on push to main)

@@ -1,0 +1,68 @@
+# CI/CD Pipeline — Hackathon (Java)
+# TODO: Complete the placeholder steps marked with TODO comments
+
+name: Deploy Pipeline
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: maven
+      - run: ./mvnw test
+
+  build-and-push:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      # TODO: Log in to GHCR (GitHub Container Registry)
+      # Use docker/login-action pinned to a commit SHA
+
+      # TODO: Build and push the Docker image
+      # Use docker/build-push-action pinned to a commit SHA
+      # Tag with ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+  terraform-plan:
+    needs: test
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555e7e3f22b67044a7
+        with:
+          terraform_version: 1.14.8
+      # TODO: Run terraform init and terraform plan
+
+  terraform-apply:
+    needs: build-and-push
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555e7e3f22b67044a7
+        with:
+          terraform_version: 1.14.8
+      # TODO: Run terraform init and terraform apply
+
+  verify:
+    needs: terraform-apply
+    runs-on: ubuntu-24.04
+    steps:
+      # TODO: Add a health check with retry logic
+      - name: Placeholder
+        run: echo "TODO - implement health check"

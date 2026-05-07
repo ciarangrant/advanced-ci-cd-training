@@ -1,0 +1,8 @@
+fastapi==0.115.6
+uvicorn==0.34.0
+# feedback round 2026-04-17 / FB-005-ENV — Prometheus instrumentation
+prometheus-fastapi-instrumentator==7.0.2
+# fastapi.testclient imports starlette.testclient which requires httpx.
+# Tests in the starter collect `from fastapi.testclient import TestClient`
+# so httpx must be present for pytest to run against the starter.
+httpx==0.28.1
